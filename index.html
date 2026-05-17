@@ -569,6 +569,21 @@
         <div class="result-item-value green" id="r_recovery">—<span> %</span></div>
       </div>
     </div>
+
+    <!-- Light fraction & Kerosene row -->
+    <div style="border-top:1px solid #c8dbe8; background:#f5f8fc; padding:10px 14px;">
+      <div style="font-size:12px;color:#555;font-weight:600;margin-bottom:6px;letter-spacing:0.2px;">สัดส่วนกลุ่มผลิตภัณฑ์ (Fraction Summary)</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:260px;background:#fff;border:1px solid #b8cfe0;border-radius:4px;padding:8px 12px;">
+          <div style="font-size:11px;color:#666;font-weight:500;margin-bottom:3px;">💧 Light fraction</div>
+          <div style="font-size:14px;font-weight:700;color:#1a6bb5;" id="r_lightFrac">—</div>
+        </div>
+        <div style="flex:1;min-width:260px;background:#fff;border:1px solid #b8cfe0;border-radius:4px;padding:8px 12px;">
+          <div style="font-size:11px;color:#666;font-weight:500;margin-bottom:3px;">🛢 Kerosene</div>
+          <div style="font-size:14px;font-weight:700;color:#2e7d52;" id="r_kerosene">—</div>
+        </div>
+      </div>
+    </div>
   </div>
 
 
@@ -719,6 +734,39 @@ function calculate() {
   document.getElementById('r_recovery').innerHTML = `${recPct.toFixed(1)}<span> %</span>`;
   document.getElementById('r_loss').innerHTML = `${loss.toFixed(0)}<span> ml (${lossPct.toFixed(1)}%)</span>`;
 
+  // ── Light fraction & Kerosene ──
+  // Light fraction: IBP = o_ibp (OVHD ปลายหอ IBP), FBP = 180°C คงที่ (ปลายหอสุดของ LDO)
+  // Kerosene: IBP = o_dsl (OVHD ปลายหอ DSL), FBP = o_fol (OVHD ปลายหอ FOL), % = DSL + FOL รวมกัน
+  const ibpOvhdTemp = parseFloat(document.getElementById('o_ibp').value);
+  const lightFBP    = 180;  // ปลายหอ LDO คงที่ 180°C
+  const keroIBP     = 180;  // ต่อจาก FBP ของ Light fraction = 180°C คงที่
+  const keroFBP     = parseFloat(document.getElementById('o_fol').value);
+
+  const lightPct = hasLdo ? (ldoSum / total) * 100 : NaN;
+  // Kerosene = DSL + FOL
+  const keroVol  = (!isNaN(dslV) ? dslV : 0) + (!isNaN(folV) ? folV : 0);
+  const hasKero  = !isNaN(dslV) || !isNaN(folV);
+  const keroPct  = hasKero ? (keroVol / total) * 100 : NaN;
+
+  const lf = document.getElementById('r_lightFrac');
+  const kr = document.getElementById('r_kerosene');
+
+  if (!isNaN(ibpOvhdTemp) && !isNaN(lightPct)) {
+    lf.textContent = `IBP ${ibpOvhdTemp.toFixed(0)}°C, FBP ${lightFBP}°C : ${lightPct.toFixed(1)}%`;
+  } else if (!isNaN(lightPct)) {
+    lf.textContent = `FBP ${lightFBP}°C : ${lightPct.toFixed(1)}%`;
+  } else {
+    lf.textContent = '—';
+  }
+
+  if (!isNaN(keroFBP) && !isNaN(keroPct)) {
+    kr.textContent = `IBP ${keroIBP}°C, FBP ${keroFBP.toFixed(0)}°C : ${keroPct.toFixed(1)}%`;
+  } else if (!isNaN(keroPct)) {
+    kr.textContent = `IBP ${keroIBP}°C : ${keroPct.toFixed(1)}%`;
+  } else {
+    kr.textContent = '—';
+  }
+
   showToast('✓ คำนวณเสร็จแล้ว');
 }
 
@@ -808,6 +856,8 @@ function clearAll() {
     if (el) el.innerHTML = html;
   });
 
+  document.getElementById('r_lightFrac').textContent = '—';
+  document.getElementById('r_kerosene').textContent = '—';
 
   showToast('✓ ล้างข้อมูลแล้ว');
 }
