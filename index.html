@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รายงานการตรวจคุณภาพวัตถุดิบ ASTM D86</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #c8d4e0;
+    font-family: 'Sarabun', sans-serif;
+    padding: 24px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Toolbar */
+  .toolbar {
+    width: 780px;
+    max-width: 100%;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 9px 20px;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-calc { background: #1a6bb5; color: #fff; }
+  .btn-calc:hover { background: #155a99; }
+  .btn-print { background: #2e7d52; color: #fff; }
+  .btn-print:hover { background: #256040; }
+  .btn-clear { background: #b94040; color: #fff; }
+  .btn-clear:hover { background: #953333; }
+  .btn-sample { background: #7a5a1e; color: #fff; }
+  .btn-sample:hover { background: #5e4416; }
+
+  /* Paper */
+  .paper {
+    background: #ffffff;
+    width: 780px;
+    max-width: 100%;
+    padding: 28px 32px 36px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.1);
+    border-radius: 3px;
+    position: relative;
+  }
+
+  /* Header */
+  .header-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 18px;
+  }
+  .header-icon {
+    width: 110px;
+    height: 88px;
+    background: linear-gradient(135deg, #d4e8f8 0%, #b8d8f0 40%, #c8dff5 70%, #d8eaf8 100%);
+    border: 1px solid #a8c8e8;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  /* SVG illustration */
+  .header-info {
+    flex: 1;
+  }
+  .report-title {
+    font-family: 'Prompt', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: #1a2a4a;
+    text-align: center;
+    margin-bottom: 14px;
+    letter-spacing: 0.3px;
+  }
+  .info-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .info-label {
+    font-size: 13.5px;
+    color: #333;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .info-input {
+    border: none;
+    border-bottom: 1.5px solid #333;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 14px;
+    color: #111;
+    padding: 2px 4px;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-weight: 600;
+  }
+  .info-input:focus { border-bottom-color: #1a6bb5; }
+  .info-full { grid-column: 2 / -1; }
+
+  /* Section table */
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a2a4a;
+    margin: 18px 0 6px;
+    padding-bottom: 3px;
+    border-bottom: 1.5px solid #2a4a80;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  th {
+    background: #ddeaf7;
+    border: 1px solid #9ab8d8;
+    padding: 7px 10px;
+    font-weight: 600;
+    color: #1a2a4a;
+    text-align: center;
+    font-size: 13px;
+  }
+  td {
+    border: 1px solid #b8cfe0;
+    padding: 5px 8px;
+    vertical-align: middle;
+  }
+
+  /* Meta table */
+  .meta-table td:first-child {
+    background: #eef4fb;
+    font-weight: 600;
+    color: #1a2a4a;
+    width: 55%;
+    padding-left: 12px;
+  }
+  .meta-table td:nth-child(2) {
+    text-align: center;
+    font-weight: 700;
+    font-size: 15px;
+    color: #111;
+    width: 25%;
+  }
+  .meta-table td:nth-child(3) {
+    text-align: center;
+    color: #555;
+    width: 20%;
+    font-size: 12px;
+  }
+  .meta-input {
+    border: none;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #111;
+    background: transparent;
+    outline: none;
+    text-align: center;
+    width: 100%;
+  }
+
+  /* Distillation table */
+  .dist-table .col-label {
+    background: #eef4fb;
+    font-weight: 700;
+    text-align: center;
+    color: #1a2a4a;
+    width: 60px;
+  }
+  .dist-table .col-label.ibp { background: #c8dff5; }
+  .dist-table .col-label.dsl { background: #d8eec8; }
+  .dist-table .col-label.fol { background: #f5e8c8; }
+
+  .dist-table .row-ovhd {
+    text-align: center;
+    font-weight: 600;
+    color: #1a2a4a;
+    background: #f5f8fc;
+    width: 120px;
+  }
+  .dist-table .row-vol {
+    text-align: center;
+    width: 80px;
+  }
+  .dist-table .row-pct {
+    text-align: center;
+    width: 70px;
+  }
+  .dist-table .col-bottom {
+    text-align: center;
+    width: 110px;
+  }
+
+  /* Calculated cell */
+  .calc-cell {
+    color: #1a6bb5;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+  }
+  .calc-cell-auto {
+    color: #2e7d52;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  /* editable input in table */
+  .td-input {
+    border: none;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+    background: transparent;
+    outline: none;
+    text-align: center;
+    width: 100%;
+  }
+  .td-input:focus { background: #eef6ff; border-radius: 2px; }
+  .td-input::placeholder { color: #bbb; font-weight: 400; font-size: 12px; }
+
+
+  /* Results section */
+  .results-box {
+    margin-top: 20px;
+    border: 1.5px solid #9ab8d8;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .results-header {
+    background: #2a4a80;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13.5px;
+    padding: 8px 14px;
+    letter-spacing: 0.3px;
+  }
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: none;
+  }
+  .result-item {
+    padding: 10px 12px;
+    border-right: 1px solid #c8dbe8;
+    border-bottom: 1px solid #c8dbe8;
+  }
+  .result-item:last-child { border-right: none; }
+  .result-item-label {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 3px;
+    font-weight: 500;
+  }
+  .result-item-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a2a4a;
+  }
+  .result-item-value span { font-size: 12px; color: #888; font-weight: 500; }
+  .result-item-value.blue { color: #1a6bb5; }
+  .result-item-value.green { color: #2e7d52; }
+  .result-item-value.orange { color: #b85a00; }
+  .result-item-value.red { color: #b94040; }
+
+  /* Note area */
+  .note-area {
+    margin-top: 14px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .note-label { font-size: 13px; font-weight: 600; color: #333; white-space: nowrap; margin-top: 2px; }
+  .note-input {
+    flex: 1;
+    border: none;
+    border-bottom: 1px solid #aaa;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 13px;
+    color: #333;
+    background: transparent;
+    outline: none;
+    padding: 2px 4px;
+  }
+
+  /* Footer */
+  .footer-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+    gap: 20px;
+  }
+  .sign-block { text-align: center; flex: 1; }
+  .sign-line { border-bottom: 1px solid #555; margin-bottom: 5px; height: 32px; }
+  .sign-label { font-size: 12px; color: #555; }
+
+  /* Toast */
+  #toast {
+    position: fixed; bottom: 20px; right: 20px;
+    padding: 10px 20px;
+    background: #2e7d52; color: #fff;
+    font-family: 'Sarabun', sans-serif; font-size: 14px; font-weight: 600;
+    border-radius: 5px;
+    opacity: 0; transform: translateY(10px);
+    transition: all 0.3s; pointer-events: none; z-index: 999;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+
+  .btn-pdf { background: #5a3a99; color: #fff; }
+  .btn-pdf:hover { background: #47307a; }
+  .btn-img { background: #1a7a7a; color: #fff; }
+  .btn-img:hover { background: #145f5f; }
+  .btn-img { background: #1a7a6e; color: #fff; }
+  .btn-img:hover { background: #145f55; }
+
+  /* info-row-line */
+  .info-row-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .toolbar { display: none; }
+    .paper { box-shadow: none; width: 100%; padding: 16px 20px; }
+    .results-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+<div class="toolbar">
+  <button class="btn btn-calc" onclick="calculate()">🔢 คำนวณ</button>
+  <button class="btn btn-sample" onclick="loadSample()">📋 โหลดตัวอย่าง (LDO)</button>
+  <button class="btn btn-clear" onclick="clearAll()">🗑 ล้างข้อมูล</button>
+  <button class="btn btn-print" onclick="window.print()">🖨 พิมพ์</button>
+  <button class="btn btn-pdf" onclick="downloadPDF()">📄 โหลด PDF</button>
+  <button class="btn btn-img" onclick="downloadImage()">🖼 บันทึกรูป</button>
+</div>
+
+<div class="paper">
+
+  <!-- Header -->
+  <div class="header-row">
+    <!-- Lab illustration SVG -->
+    <div class="header-icon">
+      <svg width="100" height="80" viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Person 1 -->
+        <circle cx="28" cy="22" r="8" fill="#4a90d9"/>
+        <rect x="20" y="32" width="16" height="22" rx="4" fill="#3a7abf"/>
+        <rect x="14" y="34" width="8" height="14" rx="3" fill="#3a7abf"/>
+        <rect x="28" y="34" width="8" height="14" rx="3" fill="#3a7abf"/>
+        <!-- Person 2 -->
+        <circle cx="72" cy="22" r="8" fill="#e88a3a"/>
+        <rect x="64" y="32" width="16" height="22" rx="4" fill="#d07828"/>
+        <rect x="58" y="34" width="8" height="14" rx="3" fill="#d07828"/>
+        <rect x="72" y="34" width="8" height="14" rx="3" fill="#d07828"/>
+        <!-- Desk -->
+        <rect x="10" y="55" width="80" height="4" rx="2" fill="#8ab0d0"/>
+        <rect x="15" y="59" width="4" height="12" rx="1" fill="#6a90b0"/>
+        <rect x="81" y="59" width="4" height="12" rx="1" fill="#6a90b0"/>
+        <!-- Flask -->
+        <rect x="44" y="42" width="12" height="2" rx="1" fill="#5a9ad0"/>
+        <path d="M44 44 L40 58 Q40 62 50 62 Q60 62 60 58 L56 44 Z" fill="rgba(90,154,208,0.4)" stroke="#5a9ad0" stroke-width="1.5"/>
+        <!-- Bubbles -->
+        <circle cx="48" cy="56" r="2" fill="rgba(255,255,255,0.6)"/>
+        <circle cx="52" cy="52" r="1.5" fill="rgba(255,255,255,0.5)"/>
+        <!-- Gear icons -->
+        <circle cx="28" cy="14" r="4" fill="rgba(255,255,255,0.4)" stroke="#fff" stroke-width="1"/>
+        <circle cx="72" cy="14" r="4" fill="rgba(255,255,255,0.4)" stroke="#fff" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <div class="header-info">
+      <div class="report-title">รายงานการตรวจคุณภาพวัตถุดิบ ASTM D86</div>
+      <div class="info-fields">
+        <div class="info-row-line">
+          <span class="info-label">วันที่ตรวจสอบ :</span>
+          <input class="info-input" type="text" id="testDate" placeholder="วว/ดด/ปป" style="width:130px">
+          <span class="info-label" style="margin-left:16px">เวลา :</span>
+          <input class="info-input" type="text" id="testTime" placeholder="00:00" style="width:80px">
+        </div>
+        <div class="info-row-line" style="margin-top:8px">
+          <span class="info-label">ประเภทวัตถุดิบ :</span>
+          <input class="info-input" type="text" id="sampleType" placeholder="เช่น SSC-050502" style="flex:1">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Meta Info Table -->
+  <table class="meta-table">
+    <tbody>
+      <tr>
+        <td>ค่า ถพ. (Density)</td>
+        <td><input class="meta-input" id="density" type="number" step="0.001" placeholder="0.000"></td>
+        <td>kg/L.</td>
+      </tr>
+      <tr>
+        <td>ปริมาตรที่ใช้ทดสอบ (Total Volume)</td>
+        <td><input class="meta-input" id="totalVol" type="number" placeholder="300" oninput="calcFolVol()"></td>
+        <td>ml.</td>
+      </tr>
+      <tr>
+        <td>% ความชื้น (% moisture)</td>
+        <td><input class="meta-input" id="moisture" type="number" step="0.01" placeholder="0.00"></td>
+        <td>%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Distillation Table -->
+  <div class="section-title">ข้อมูลการกลั่น (Distillation Data)</div>
+
+  <table class="dist-table">
+    <thead>
+      <tr>
+        <th rowspan="2" style="width:60px"></th>
+        <th rowspan="2" style="width:130px">อุณหภูมิก้นหอ<br>(Bottom temp) °C</th>
+        <th rowspan="2" style="width:130px">อุณหภูมิปลายหอ<br>(OVHD temp) °C</th>
+        <th colspan="2">ปริมาตร</th>
+      </tr>
+      <tr>
+        <th style="width:80px">ml.</th>
+        <th style="width:70px">%</th>
+      </tr>
+    </thead>
+    <tbody id="distBody">
+      <!-- IBP -->
+      <tr>
+        <td class="col-label ibp">IBP</td>
+        <td><input class="td-input" id="b_ibp" type="number" step="0.1" placeholder="—"></td>
+        <td><input class="td-input" id="o_ibp" type="number" step="0.1" placeholder="—"></td>
+        <td class="calc-cell" id="v_ibp">0</td>
+        <td class="calc-cell" id="p_ibp">0</td>
+      </tr>
+      <!-- LDO rows: 20,40,60,80,100,120,140,160,180 ml -->
+      <tr>
+        <td class="col-label" rowspan="9">LDO</td>
+        <td><input class="td-input" id="b_20" type="number" step="0.1" placeholder="—"></td>
+        <td class="row-ovhd">20</td>
+        <td class="row-vol"><input class="td-input" id="v_20" type="number" step="0.1" placeholder="—" oninput="calcPct(this,'p_20')"></td>
+        <td class="row-pct calc-cell-auto" id="p_20">—</td>
+      </tr>
+      <tr>
+        <td><input class="td-input" id="b_40" type="number" step="0.1" placeholder="—"></td>
+        <td class="row-ovhd">40</td>
+        <td class="row-vol"><input class="td-input" id="v_40" type="number" step="0.1" placeholder="—" oninput="calcPct(this,'p_40')"></td>
+        <td class="row-pct calc-cell-auto" id="p_40">—</td>
+      </tr>
+      <tr>
+        <td><input class="td-input" id="b_60" type="number" step="0.1" placeholder="—"></td>
+        <td class="row-ovhd">60</td>
+        <td class="row-vol"><input class="td-input" id="v_60" type="number" step="0.1" placeholder="—" oninput="calcPct(this,'p_60')"></td>
+        <td class="row-pct calc-cell-auto" id="p_60">—</td>
+      </tr>
+      <tr>
+        <td><input class="td-input" id="b_80" type="number" step="0.1" placeholder="—"></td>
+        <td class="row-ovhd">80</td>
+        <td class="row-vol"><input class="td-input" id="v_80" type="number" step="0.1" placeholder="—" oninput="calcPct(this,'p_80')"></td>
+        <td class="row-pct calc-cell-auto" id="p_80">—</td>
+      </tr>
+      <tr>
+        <td><input class="td-input" id="b_100" type="number" step="0.1" placeholder="—"></td>
+        <td class="row-ovhd">100</td>
+        <td class="row-vol"><input class="td-input" id="v_100" type="number" step="0.1" placeholder="—" oninput="calcPct(this,'p_100')"></td>
+        <td class="row-pct calc-cell-auto" id="p_100">—</td>
+      </tr>
+      <tr>
+        <td><input class="td-input" id="b_120" type="number" step="0.1" placeholder="—"></td>
+        <td class="row-ovhd">120</td>
+        <td class="row-vol"><input class="td-input" id="v_120" type="number" step="0.1" placeholder="—" oninput="calcPct(this,'p_120')"></td>
+        <td class="row-pct calc-cell-auto" id="p_120">—</td>
+      </tr>
+      <tr>
+        <td><input class="td-input" id="b_140" type="number" step="0.1" placeholder="—"></td>
+        <td class="row-ovhd">140</td>
+        <td class="row-vol"><input class="td-input" id="v_140" type="number" step="0.1" placeholder="—" oninput="calcPct(this,'p_140')"></td>
+        <td class="row-pct calc-cell-auto" id="p_140">—</td>
+      </tr>
+      <tr>
+        <td><input class="td-input" id="b_160" type="number" step="0.1" placeholder="—"></td>
+        <td class="row-ovhd">160</td>
+        <td class="row-vol"><input class="td-input" id="v_160" type="number" step="0.1" placeholder="—" oninput="calcPct(this,'p_160')"></td>
+        <td class="row-pct calc-cell-auto" id="p_160">—</td>
+      </tr>
+      <tr>
+        <td><input class="td-input" id="b_180" type="number" step="0.1" placeholder="—"></td>
+        <td class="row-ovhd">180</td>
+        <td class="row-vol"><input class="td-input" id="v_180" type="number" step="0.1" placeholder="—" oninput="calcPct(this,'p_180')"></td>
+        <td class="row-pct calc-cell-auto" id="p_180">—</td>
+      </tr>
+      <!-- DSL -->
+      <tr>
+        <td class="col-label dsl">DSL</td>
+        <td><input class="td-input" id="b_dsl" type="number" step="0.1" placeholder="—"></td>
+        <td><input class="td-input" id="o_dsl" type="number" step="0.1" placeholder="—"></td>
+        <td class="row-vol"><input class="td-input" id="v_dsl" type="number" step="0.1" placeholder="—" oninput="calcPct(this,'p_dsl')"></td>
+        <td class="row-pct calc-cell-auto" id="p_dsl">—</td>
+      </tr>
+      <!-- FOL -->
+      <tr>
+        <td class="col-label fol">FOL</td>
+        <td>
+          <div style="display:flex;align-items:center;justify-content:center;gap:3px">
+            <span style="font-weight:700;color:#b85a00;font-size:14px">&gt;</span>
+            <input class="td-input" id="b_fol" type="number" step="0.1" placeholder="—" style="width:calc(100% - 16px)">
+          </div>
+        </td>
+        <td>
+          <div style="display:flex;align-items:center;justify-content:center;gap:3px">
+            <span style="font-weight:700;color:#b85a00;font-size:14px">&gt;</span>
+            <input class="td-input" id="o_fol" type="number" step="0.1" placeholder="—" style="width:calc(100% - 16px)">
+          </div>
+        </td>
+        <td class="row-vol calc-cell-auto" id="v_fol_display" style="font-weight:700;font-size:14px">—</td>
+        <td class="row-pct calc-cell-auto" id="p_fol">—</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Calculation Results -->
+  <div class="results-box">
+    <div class="results-header">📊 ผลการคำนวณ (Calculated Results)</div>
+    <div class="results-grid">
+      <div class="result-item">
+        <div class="result-item-label">ปริมาตร DSL</div>
+        <div class="result-item-value green" id="r_dslV">—<span> ml (—%)</span></div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">ปริมาตร FOL (เศษ)</div>
+        <div class="result-item-value orange" id="r_folV">—<span> ml (—%)</span></div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">ผล LDO รวม</div>
+        <div class="result-item-value blue" id="r_ldo">—<span> ml (—%)</span></div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">สูญหาย (Loss)</div>
+        <div class="result-item-value red" id="r_loss">—<span> ml (—%)</span></div>
+      </div>
+      <div class="result-item" style="border-right:none">
+        <div class="result-item-label">% Recovery รวม</div>
+        <div class="result-item-value green" id="r_recovery">—<span> %</span></div>
+      </div>
+    </div>
+  </div>
+
+
+
+</div><!-- end .paper -->
+
+<div id="toast">✓ คำนวณเสร็จแล้ว</div>
+
+<script>
+// Auto-set today's date
+const d = new Date();
+document.getElementById('testDate').value = 
+  String(d.getDate()).padStart(2,'0') + '/' +
+  String(d.getMonth()+1).padStart(2,'0') + '/' +
+  (d.getFullYear()+543);
+document.getElementById('testTime').value =
+  String(d.getHours()).padStart(2,'0') + ':' +
+  String(d.getMinutes()).padStart(2,'0');
+
+// Calc % from volume (for non-FOL rows)
+function calcPct(input, pctId) {
+  const total = parseFloat(document.getElementById('totalVol').value) || 300;
+  const vol = parseFloat(input.value);
+  const el = document.getElementById(pctId);
+  if (isNaN(vol)) { el.textContent = '—'; } else { el.textContent = ((vol / total) * 100).toFixed(1); }
+  calcFolVol();
+}
+
+// FOL ml = Total Volume - sum of all other volumes
+function calcFolVol() {
+  const total = parseFloat(document.getElementById('totalVol').value) || 300;
+  const volKeys = ['20','40','60','80','100','120','140','160','180','dsl'];
+  let sumVol = 0, hasAny = false;
+  volKeys.forEach(k => {
+    const el = document.getElementById('v_'+k);
+    if (!el) return;
+    const v = parseFloat(el.value);
+    if (!isNaN(v)) { sumVol += v; hasAny = true; }
+  });
+  const dispEl = document.getElementById('v_fol_display');
+  const pctEl  = document.getElementById('p_fol');
+  if (!hasAny) { dispEl.textContent = '—'; pctEl.textContent = '—'; return; }
+  const folVol = total - sumVol;
+  dispEl.textContent = folVol.toFixed(1);
+  pctEl.textContent  = ((folVol / total) * 100).toFixed(1);
+}
+
+// Calculate all
+function calculate() {
+  const total = parseFloat(document.getElementById('totalVol').value) || 300;
+
+  // Recalc all pcts for LDO+DSL rows
+  const volFields = ['20','40','60','80','100','120','140','160','180','dsl'];
+  volFields.forEach(k => {
+    const inp = document.getElementById('v_'+k);
+    const pctEl = document.getElementById('p_'+k);
+    if (!inp || !pctEl) return;
+    const v = parseFloat(inp.value);
+    pctEl.textContent = isNaN(v) ? '—' : ((v/total)*100).toFixed(1);
+  });
+
+  // Recalc FOL vol (auto)
+  calcFolVol();
+
+  // Read FOL volume from the computed display cell
+  const folVolRaw = parseFloat(document.getElementById('v_fol_display').textContent);
+  const folV = isNaN(folVolRaw) ? NaN : folVolRaw;
+
+  // IBP (ไม่แสดงผลใน results แล้ว)
+  const ibpO = parseFloat(document.getElementById('o_ibp').value);
+
+  // Build data points for T50 interpolation (OVHD temp vs cumulative %)
+  // We'll use the LDO overhead temps and their volumes
+  const ldoRows = [
+    { key:'20',  ovhd: getVal('o_ibp') },  // IBP overhead
+  ];
+
+  // Build curve: pairs of (cumVol%, ovhd_temp) from filled rows
+  // Using OVHD temps for LDO section (fixed at 20,40...180 ml cumulative)
+  // and bottom temps to interpolate T50 from bottom temp curve
+  const curveData = [];
+
+  // IBP point
+  const ibpOvhd = parseFloat(document.getElementById('o_ibp').value);
+  if (!isNaN(ibpOvhd)) curveData.push({ pct: 0, temp: ibpOvhd });
+
+  // LDO rows: ใช้ volume จริงที่กรอกในช่อง ml. หาร total เพื่อคำนวณ %
+  const ldoKeysT50 = ['20','40','60','80','100','120','140','160','180'];
+  ldoKeysT50.forEach(k => {
+    const bTemp = parseFloat(document.getElementById('b_'+k)?.value);
+    const vol   = parseFloat(document.getElementById('v_'+k)?.value);
+    if (!isNaN(bTemp) && !isNaN(vol)) {
+      const pct = (vol / total) * 100;
+      curveData.push({ pct, temp: bTemp });
+    }
+  });
+
+  // DSL
+  const dslB = parseFloat(document.getElementById('b_dsl').value);
+  const dslO = parseFloat(document.getElementById('o_dsl').value);
+  const dslV = parseFloat(document.getElementById('v_dsl').value);
+  const folB = parseFloat(document.getElementById('b_fol').value);
+  const folO = parseFloat(document.getElementById('o_fol').value);
+  // folV is already computed above from calcFolVol()
+
+  if (!isNaN(dslV)) {
+    const dslPct = (dslV/total)*100;
+    if (!isNaN(dslB)) curveData.push({ pct: dslPct, temp: dslB });
+  }
+
+  // T50 (ไม่แสดงผลใน results แล้ว)
+  curveData.sort((a,b)=>a.pct-b.pct);
+
+  // DSL & FOL volumes
+  const setR = (id, val, unit) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = val != null && !isNaN(val)
+      ? `${typeof val === 'number' ? val.toFixed(1) : val}<span> ${unit}</span>`
+      : `—<span> ${unit}</span>`;
+  };
+
+  const dslPct = !isNaN(dslV) ? (dslV/total)*100 : NaN;
+  const folPct = !isNaN(folV) ? (folV/total)*100 : NaN;
+
+  document.getElementById('r_dslV').innerHTML = !isNaN(dslV)
+    ? `${dslV.toFixed(0)}<span> ml (${dslPct.toFixed(1)}%)</span>` : '—<span> ml</span>';
+  document.getElementById('r_folV').innerHTML = !isNaN(folV)
+    ? `${folV.toFixed(0)}<span> ml (${folPct.toFixed(1)}%)</span>` : '—<span> ml</span>';
+
+  // LDO total = ผลรวม ml. ทุกแถวใน LDO (20,40,...,180)
+  const ldoKeys = ['20','40','60','80','100','120','140','160','180'];
+  let ldoSum = 0, hasLdo = false;
+  ldoKeys.forEach(k => {
+    const v = parseFloat(document.getElementById('v_'+k)?.value);
+    if (!isNaN(v)) { ldoSum += v; hasLdo = true; }
+  });
+  if (hasLdo) {
+    const ldoPct = (ldoSum / total) * 100;
+    document.getElementById('r_ldo').innerHTML = `${ldoSum.toFixed(0)}<span> ml (${ldoPct.toFixed(1)}%)</span>`;
+  }
+
+  // Recovery = LDO + DSL + FOL, Loss = Total - Recovery
+  const recoveryVol = (hasLdo ? ldoSum : 0) + (!isNaN(dslV) ? dslV : 0) + (!isNaN(folV) ? folV : 0);
+  const loss = total - recoveryVol;
+  const recPct = (recoveryVol / total) * 100;
+  const lossPct = (loss / total) * 100;
+  document.getElementById('r_recovery').innerHTML = `${recPct.toFixed(1)}<span> %</span>`;
+  document.getElementById('r_loss').innerHTML = `${loss.toFixed(0)}<span> ml (${lossPct.toFixed(1)}%)</span>`;
+
+  showToast('✓ คำนวณเสร็จแล้ว');
+}
+
+function getVal(id) {
+  return parseFloat(document.getElementById(id)?.value);
+}
+
+function interpolate(data, pct) {
+  if (data.length < 2) return null;
+  const exact = data.find(d => d.pct === pct);
+  if (exact) return exact.temp;
+  let lo = null, hi = null;
+  for (let i = 0; i < data.length-1; i++) {
+    if (data[i].pct <= pct && data[i+1].pct >= pct) {
+      lo = data[i]; hi = data[i+1]; break;
+    }
+  }
+  if (!lo || !hi) return null;
+  const t = (pct - lo.pct) / (hi.pct - lo.pct);
+  return lo.temp + t * (hi.temp - lo.temp);
+}
+
+// Load sample data from image
+function loadSample() {
+  document.getElementById('testDate').value = '05/05/69';
+  document.getElementById('testTime').value = '04:00';
+  document.getElementById('sampleType').value = 'SSC-050502';
+  document.getElementById('density').value = '0.845';
+  document.getElementById('totalVol').value = '300';
+  document.getElementById('moisture').value = '0.02';
+
+  // IBP
+  document.getElementById('b_ibp').value = '182';
+  document.getElementById('o_ibp').value = '56';
+
+  // LDO
+  document.getElementById('b_140').value = '173';
+  document.getElementById('v_140').value = '10';
+  document.getElementById('p_140').textContent = ((10/300)*100).toFixed(1);
+
+  document.getElementById('b_160').value = '185';
+  document.getElementById('v_160').value = '25';
+  document.getElementById('p_160').textContent = ((25/300)*100).toFixed(1);
+
+  document.getElementById('b_180').value = '210';
+  document.getElementById('v_180').value = '65';
+  document.getElementById('p_180').textContent = ((65/300)*100).toFixed(1);
+
+  // DSL
+  document.getElementById('b_dsl').value = '420';
+  document.getElementById('o_dsl').value = '340';
+  document.getElementById('v_dsl').value = '175';
+  document.getElementById('p_dsl').textContent = ((175/300)*100).toFixed(1);
+
+  // FOL temps only — volume auto-calculated
+  document.getElementById('b_fol').value = '420';
+  document.getElementById('o_fol').value = '340';
+  calcFolVol();
+
+  showToast('✓ โหลดข้อมูลตัวอย่างแล้ว');
+}
+
+function clearAll() {
+  const inputs = document.querySelectorAll('input.td-input, input.meta-input');
+  inputs.forEach(i => { i.value = ''; });
+  document.getElementById('note').value = '';
+
+  // Reset pct cells
+  const pctIds = ['ibp','20','40','60','80','100','120','140','160','180','dsl','fol'];
+  pctIds.forEach(k => {
+    const el = document.getElementById('p_'+k);
+    if (el) el.textContent = k === 'ibp' ? '0' : '—';
+  });
+  // Reset FOL auto-calc display
+  document.getElementById('v_fol_display').textContent = '—';
+
+  // Reset results
+  const rDefaults = {
+    'dslV':     '—<span> ml (—%)</span>',
+    'folV':     '—<span> ml (—%)</span>',
+    'ldo':      '—<span> ml (—%)</span>',
+    'loss':     '—<span> ml (—%)</span>',
+    'recovery': '—<span> %</span>',
+  };
+  Object.entries(rDefaults).forEach(([id, html]) => {
+    const el = document.getElementById('r_'+id);
+    if (el) el.innerHTML = html;
+  });
+
+
+  showToast('✓ ล้างข้อมูลแล้ว');
+}
+
+
+// ── Save as Image ──
+function downloadImage() {
+  calculate();
+  const toolbar = document.querySelector('.toolbar');
+  const paper = document.querySelector('.paper');
+  toolbar.style.display = 'none';
+
+  html2canvas(paper, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
+    toolbar.style.display = '';
+    const link = document.createElement('a');
+    const name = document.getElementById('sampleType').value || 'report';
+    link.download = 'ASTM-D86-' + name + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showToast('✓ บันทึกรูปแล้ว');
+  });
+}
+
+// ── PDF Generation using html2pdf.js ──
+function downloadPDF() {
+  calculate();
+  const element = document.querySelector('.paper');
+  const toolbar = document.querySelector('.toolbar');
+  toolbar.style.display = 'none';
+
+  const opt = {
+    margin: [8, 8, 8, 8],
+    filename: 'ASTM-D86-' + (document.getElementById('sampleType').value || 'report') + '.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  html2pdf().set(opt).from(element).save().then(() => {
+    toolbar.style.display = '';
+    showToast('✓ ดาวน์โหลด PDF แล้ว');
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+</script>
+</body>
+</html>
