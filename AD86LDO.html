@@ -320,12 +320,17 @@
   }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+<script src="excel-import.js"></script>
 </head>
 <body>
 
 <div class="toolbar">
   <button class="btn btn-switch" onclick="window.location.href='index.html'">กลับไปหน้าฟอร์มน้ำมันดิบ</button>
   <button class="btn btn-sample" onclick="loadSample()">📋 โหลดตัวอย่าง LDO</button>
+  <button class="btn btn-print" onclick="document.getElementById('excelFile').click()">📂 โหลดไฟล์ Excel</button>
+  <button class="btn btn-switch" onclick="downloadExcelTemplate()">⬇ ส่งออก Excel</button>
+  <input type="file" id="excelFile" accept=".xlsx,.xls,.csv" style="display:none">
   <button class="btn btn-clear" onclick="clearAll()">🗑 ล้างข้อมูล</button>
   <button class="btn btn-print" onclick="window.print()">🖨 พิมพ์</button>
   <button class="btn btn-img" onclick="downloadImage()">🖼 บันทึกรูป</button>
